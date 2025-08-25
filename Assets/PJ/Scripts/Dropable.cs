@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using System;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine.UI;
 [RequireComponent(typeof(Draggable))]
 public class Dropable : MonoBehaviour
 {
@@ -38,12 +39,12 @@ public class Dropable : MonoBehaviour
     {
         Debug.Log("Drop completed! ***" + d.name);
     }
-    [SerializeField] private float dropDistanceThreshold = 0.4f; // you can tweak in Inspector
+    [SerializeField] private float dropDistanceThreshold = 0.5f; // you can tweak in Inspector
 
     void OnDragStop()
     {
         Dropzone newTargetDropzone = null;
-        float minDist =0.4f;
+        float minDist =0.5f;
 
         // 1. Check all dropzones manually
         dropZones.AddRange(FindObjectsOfType<Dropzone>());
@@ -74,6 +75,9 @@ public class Dropable : MonoBehaviour
             {
                 Debug.Log(targetDropzone.GetComponent<TextMeshProUGUI>().text+ "Drop completed! ***" +targetDropzone.name);
                 int index = int.Parse(targetDropzone.GetComponent<TextMeshProUGUI>().text);
+                newTargetDropzone.gameObject.transform.parent.gameObject.SetActive(false);
+                Image st = newTargetDropzone.transform.parent.GetChild(0).transform.GetComponent<Image>();
+                PuzzleManager.instance.StopBlinking(st);
                 PuzzleManager.instance.LoadNewDragObject(index);
             }
         }

@@ -1,9 +1,11 @@
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
+﻿using DanielLochner.Assets.SimpleZoom;
 using System.Collections;
-
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using DG.Tweening;
 public class PuzzleManager : MonoBehaviour
 {
     
@@ -14,8 +16,8 @@ public class PuzzleManager : MonoBehaviour
     public int CurrentLevelCount, fillCount;
     private int fillCountTemp=1;
   
-    public List<GameObject> levelFillImage, levelemptyImage; 
-
+    public List<GameObject> levelFillImage, levelemptyImage;
+    public TextMeshProUGUI placedTextCount;
     private void Awake()
     {
         instance = this;
@@ -59,14 +61,14 @@ public class PuzzleManager : MonoBehaviour
             // Clear list first
             levelemptyImage.Clear();
             // Loop through children
-            foreach (Transform child in currentLevel.transform.GetChild(1))
+            foreach (Transform child in currentLevel.transform.GetChild(2))
             {
                 levelemptyImage.Add(child.gameObject);
             }
             // Clear list first
             levelFillImage.Clear();
             // Loop through children
-            foreach (Transform child in currentLevel.transform.GetChild(2))
+            foreach (Transform child in currentLevel.transform.GetChild(1))
             {
                 levelFillImage.Add(child.gameObject);//Add(child.GetComponent<Image>().sprite);
             }
@@ -111,6 +113,8 @@ public class PuzzleManager : MonoBehaviour
             DestroyMatchingParents((counterFill).ToString());
             levelFillImage[counterFill - 1].gameObject.SetActive(true);
             fillCount++;
+            placedTextCount.text = $"PLACED {fillCount} / {levelFillImage.Count}";
+
             if (fillCount == levelFillImage.Count || fillCount >= levelFillImage.Count)
             {
                 Debug.Log("levelFillImage finish");
@@ -120,7 +124,8 @@ public class PuzzleManager : MonoBehaviour
     }
     IEnumerator loadnewLEvel()
     {
-        yield return new WaitForSeconds(1f);
+        currentLevel.transform.GetChild(0).gameObject.GetComponent<Image>().enabled=(true);
+        yield return new WaitForSeconds(1.5f);
         CurrentLevelCount += 1;
         PlayerPrefs.SetInt("CurrentLevel", CurrentLevelCount);
         LoadLevel();
@@ -139,6 +144,11 @@ public class PuzzleManager : MonoBehaviour
             }
         }
     }
+    public void LaodHomeSCene()
+    {
+       // PlayerPrefs.SetInt("CurrentLevel", currentlevel);
+        SceneManager.LoadScene(0);
+   }
     /// <summary>
     /// Unloads the current level prefab instance.
     /// </summary>
@@ -151,7 +161,67 @@ public class PuzzleManager : MonoBehaviour
             Debug.Log("Unloaded current level.");
         }
     }
+    public Image myImage;
+    public float blinkDuration = 0.5f;
+    public bool IsMagnify = false;
+    [ContextMenu("XYZ")]
+
+    public void DoMagnifyEffect()
+    {
+        
+        GameObject dragobject =dragObjectParent.GetChild(0).gameObject;
+        Debug.Log(dragobject.name);
+        for (int i = 0; i < levelemptyImage.Count; i++)
+        {
+            if(dragobject.GetComponent<Image>().sprite.name == levelemptyImage[i].GetComponent<Image>().sprite.name)
+            {
+                Debug.Log(dragobject.GetComponent<Image>().sprite.name + "   " + levelemptyImage[i].GetComponent<Image>().sprite.name);
+               // SimpleZoom.simpleZoom.ZoomTarget = ZoomTarget.Custom;
+                SimpleZoom.simpleZoom.customPosition = levelemptyImage[i].transform.position;
+                //SimpleZoom.simpleZoom.GoToPosition(levelemptyImage[i].transform.position,2f,0.2f);
+                // Convert world position -> screen position
+                Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(
+                    SimpleZoom.simpleZoom.GetComponentInParent<Canvas>().worldCamera,
+                    levelemptyImage[i].transform.position
+                );
+                SimpleZoom.simpleZoom.Magi(screenPos);
+                blinkingimage= levelemptyImage[i].GetComponent<Image>();
+                MagnifyEffect(levelemptyImage[i].GetComponent<Image>());
+            }
+        }
+
+    }
+    public Image blinkingimage;
+    public void MagnifyEffect(Image myImage)
+    {
+        //foreach (var tagged in StickerGameManager.instance.refSprites)
+        {
+            //  if (tagged.sprite == myImage.sprite && !tagged.isMatched)
+            {
+                BlinkImage(myImage);
+            }
+        }
+    }
+
+    public void BlinkImage(Image targetImage)
+    {
+        // Start the color tween loop: white ↔ green
+      targetImage.DOColor(Color.green, blinkDuration)
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetEase(Ease.InOutSine);
+    }
+    public void StopBlinking(Image targetImage)
+    {
+        if (targetImage == blinkingimage)
+        {
+            DOTween.Kill(targetImage);
+            targetImage.DOColor(Color.white, 0);
+            IsMagnify = false;
+        }
+    }
+
 }
+
 /*  /* old  public PuzzleLevelData levelData;
     public GameObject piecePrefab;
     public RectTransform backgroundHolder;

@@ -45,6 +45,8 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
     {
         if (!enabled || state != DragState.Dragging) return;
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
+
+        transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -52,5 +54,6 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         if (!enabled || state != DragState.Dragging) return;
         state = DragState.Idle;
         OnDragStop(this);
+        transform.localScale = new Vector3(1f, 1f, 1);
     }
 }
