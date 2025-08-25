@@ -405,7 +405,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 2050, y: 1300}
+  m_SizeDelta: {x: 2050, y: 1540.91}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &254128336
 MonoBehaviour:
@@ -1731,7 +1731,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0.924}
-  m_AnchoredPosition: {x: 0, y: -19.960022}
+  m_AnchoredPosition: {x: 0, y: -19.95996}
   m_SizeDelta: {x: 0, y: -39.920044}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &799971468
@@ -1768,10 +1768,10 @@ RectTransform:
   - {fileID: 1137060658}
   m_Father: {fileID: 1985700290}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.024508823, y: 0.93483883}
-  m_AnchorMax: {x: 0.11047354, y: 0.97300005}
-  m_AnchoredPosition: {x: -0.5, y: 2}
-  m_SizeDelta: {x: -15, y: 8}
+  m_AnchorMin: {x: 0.030000001, y: 0.93483883}
+  m_AnchorMax: {x: 0.09936243, y: 0.9765625}
+  m_AnchoredPosition: {x: 2.5, y: -1.5}
+  m_SizeDelta: {x: 3, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &799971470
 MonoBehaviour:
@@ -2190,7 +2190,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 80, y: 80}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1137060659
 MonoBehaviour:
@@ -3340,14 +3340,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3375,7 +3375,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 1040, y: 0}
-  m_SizeDelta: {x: 2080, y: 1359.8}
+  m_SizeDelta: {x: 2080, y: 1488.28}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1272946472874049755
 GameObject:
