@@ -180,6 +180,7 @@ public class PuzzleManager : MonoBehaviour
                 SimpleZoom.simpleZoom.customPosition = levelemptyImage[i].transform.position;
                 //SimpleZoom.simpleZoom.GoToPosition(levelemptyImage[i].transform.position,2f,0.2f);
                 // Convert world position -> screen position
+                // Convert the rect’s world position to screen position
                 Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(
                     SimpleZoom.simpleZoom.GetComponentInParent<Canvas>().worldCamera,
                     levelemptyImage[i].transform.position

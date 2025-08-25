@@ -5,6 +5,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Collections;
 
 namespace DanielLochner.Assets.SimpleZoom
 {
@@ -480,44 +481,49 @@ namespace DanielLochner.Assets.SimpleZoom
 
         public void Magi(Vector2 inputPosition)
         {
-            #region Reset Zoom
-            initialZoom = CurrentZoom;
+            /*            #region Reset Zoom
+                        initialZoom = CurrentZoom;
 
-            if (zoomType == ZoomType.Elastic)
-            {
-                if (CurrentZoom > minMaxZoom.max)
-                {
-                    SetZoom(minMaxZoom.max, 0.1f);
-                }
-                else
-                if (CurrentZoom < minMaxZoom.min)
-                {
-                }
-            }
-                    SetZoom(minMaxZoom.min, 0.1f);
+                        if (zoomType == ZoomType.Elastic)
+                        {
+                            if (CurrentZoom > minMaxZoom.max)
+                            {
+                                SetZoom(minMaxZoom.max, 0.1f);
+                            }
+                            else
+                            if (CurrentZoom < minMaxZoom.min)
+                            {
+                            }
+                        }
+                                SetZoom(minMaxZoom.min, 0.1f);
 
-            scrollRect.horizontal = scrollRect.vertical = true;
-            isInitialTouch = true;
-            #endregion
-
+                        scrollRect.horizontal = scrollRect.vertical = true;
+                        isInitialTouch = true;
+                        #endregion
+            */
+            SetZoom(minMaxZoom.min,0);
             #region Set Pivot
-
-            inputPosition = customPosition * new Vector2(Screen.width, Screen.height);
-               
-                Vector2 pivot = Vector2.zero;
-                if (RectTransformUtility.ScreenPointToLocalPointInRectangle(Content, inputPosition, canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera, out mouseLocalPosition))
-                {
-                    float x = Content.pivot.x + (mouseLocalPosition.x / Content.rect.width);
-                    float y = Content.pivot.y + (mouseLocalPosition.y / Content.rect.height);
-                    pivot = new Vector2(x, y);
-                }
-                SetPivot(pivot);
+            ZoomIn(inputPosition, zoomInIncrement, zoomInSmoothing);
+            /*  Vector2 pivot = Vector2.zero;
+              if (RectTransformUtility.ScreenPointToLocalPointInRectangle(Content, inputPosition, canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera, out mouseLocalPosition))
+              {
+                  float x = Content.pivot.x + (mouseLocalPosition.x / Content.rect.width);
+                  float y = Content.pivot.y + (mouseLocalPosition.y / Content.rect.height);
+                  pivot = new Vector2(x, y);
+              }
+              SetPivot(pivot);*/
             #endregion
 
             #region Set Zoom
-           // SetZoom(minMaxZoom.max, 0.1f);//  SetZoom(Mathf.Clamp(CurrentZoom + ((1 * 10) * scrollWheelIncrement), minMaxZoom.min, minMaxZoom.max), scrollWheelSmoothing);
+            // SetZoom(minMaxZoom.max, 0.1f);//  SetZoom(Mathf.Clamp(CurrentZoom + ((1 * 10) * scrollWheelIncrement), minMaxZoom.min, minMaxZoom.max), scrollWheelSmoothing);
             #endregion
 
+        }
+        IEnumerator setGo(Vector2 inputPosition)
+        {
+            SetZoom(minMaxZoom.min, 0);
+            yield return new WaitForSeconds(.5f);
+            ZoomIn(inputPosition, zoomInIncrement, zoomInSmoothing);
         }
         private void OnDoubleTap()
         {
