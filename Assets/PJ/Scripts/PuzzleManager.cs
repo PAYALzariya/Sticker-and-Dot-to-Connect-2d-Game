@@ -15,7 +15,7 @@ public class PuzzleManager : MonoBehaviour
     public Transform levelParentTra,dragObjectParent;
     public int CurrentLevelCount, fillCount;
     private int fillCountTemp=1;
-  
+    public RectTransform contentREct;
     public List<GameObject> levelFillImage, levelemptyImage;
     public TextMeshProUGUI placedTextCount;
     private void Awake()

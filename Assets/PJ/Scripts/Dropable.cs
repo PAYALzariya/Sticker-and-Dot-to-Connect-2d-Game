@@ -39,12 +39,12 @@ public class Dropable : MonoBehaviour
     {
         Debug.Log("Drop completed! ***" + d.name);
     }
-    [SerializeField] private float dropDistanceThreshold = 0.8f; // you can tweak in Inspector
+    [SerializeField] private float dropDistanceThreshold = .5f; // you can tweak in Inspector
 
     void OnDragStop()
     {
         Dropzone newTargetDropzone = null;
-        float minDist =0.8f;
+        float minDist =1.2f;
 
         // 1. Check all dropzones manually
         dropZones.AddRange(FindObjectsOfType<Dropzone>());
@@ -66,7 +66,7 @@ public class Dropable : MonoBehaviour
         }
 
         // 2. Validate distance threshold
-        if (newTargetDropzone != null && minDist <= dropDistanceThreshold)
+        if (newTargetDropzone != null /*&& minDist <= dropDistanceThreshold*/)
         {
             if (targetDropzone) targetDropzone.Lift();
             targetDropzone = newTargetDropzone;
