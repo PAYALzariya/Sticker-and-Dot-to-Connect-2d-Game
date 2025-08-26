@@ -94,7 +94,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &806839382976296388
 RectTransform:
   m_ObjectHideFlags: 0
@@ -109,34 +109,34 @@ RectTransform:
   m_Children:
   - {fileID: 6842092248275832549}
   - {fileID: 1689809477003179091}
+  - {fileID: 7523521482810843469}
   - {fileID: 3750955654871356621}
   - {fileID: 7321902974686681055}
   - {fileID: 2000290762282077424}
   - {fileID: 5806310255174818396}
+  - {fileID: 7745842676347812405}
+  - {fileID: 4203608484629685267}
+  - {fileID: 6689598907793262469}
   - {fileID: 3680985658613138286}
   - {fileID: 5144220763444188835}
   - {fileID: 5677654380402455978}
-  - {fileID: 7745842676347812405}
-  - {fileID: 6689598907793262469}
-  - {fileID: 4203608484629685267}
   - {fileID: 5938095086173930138}
   - {fileID: 8263289431679545858}
   - {fileID: 4472237566704214970}
   - {fileID: 7822551144536279953}
-  - {fileID: 7523521482810843469}
   - {fileID: 6973479122294774838}
   - {fileID: 7220767016773977011}
+  - {fileID: 1371882419078461975}
   - {fileID: 2754141891048661123}
   - {fileID: 5542029610859924305}
-  - {fileID: 3430642660575284316}
   - {fileID: 2506340405316443282}
-  - {fileID: 9155251622651627175}
   - {fileID: 4299583837630736005}
   - {fileID: 1877820442644570228}
   - {fileID: 7443422267910369174}
   - {fileID: 442129504764745674}
+  - {fileID: 9155251622651627175}
+  - {fileID: 3430642660575284316}
   - {fileID: 6336315495970244586}
-  - {fileID: 1371882419078461975}
   m_Father: {fileID: 6448958902039436533}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -2469,7 +2469,7 @@ GameObject:
   - component: {fileID: 1604784062757129592}
   - component: {fileID: 6371528933211759358}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Image (0)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4168,7 +4168,7 @@ GameObject:
   - component: {fileID: 5743862346546851490}
   - component: {fileID: 8461525238546792561}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Image (0)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4644,34 +4644,34 @@ RectTransform:
   m_Children:
   - {fileID: 564022882344041334}
   - {fileID: 1596451843037105750}
+  - {fileID: 7267044841192799337}
   - {fileID: 6044928377952082840}
   - {fileID: 725526024702652958}
   - {fileID: 7511195963148209924}
   - {fileID: 6254409347762086995}
+  - {fileID: 7351138258224171163}
+  - {fileID: 8899925524017536384}
+  - {fileID: 3187182879031895070}
   - {fileID: 8406608126845701118}
   - {fileID: 3279239306479568822}
   - {fileID: 1848046143524320276}
-  - {fileID: 7351138258224171163}
-  - {fileID: 3187182879031895070}
-  - {fileID: 8899925524017536384}
   - {fileID: 2347565502598566113}
   - {fileID: 6669842917522969991}
   - {fileID: 9029738493864352757}
   - {fileID: 5437231915609753961}
-  - {fileID: 7267044841192799337}
   - {fileID: 3723098111246761518}
   - {fileID: 6214835363147791282}
+  - {fileID: 4315914422023400454}
   - {fileID: 6903324398672542478}
   - {fileID: 8388607260045928210}
-  - {fileID: 2930930747760973247}
   - {fileID: 6577252870089402869}
-  - {fileID: 6594723511479107895}
   - {fileID: 2162792912252096492}
   - {fileID: 7101313673996850502}
   - {fileID: 8000524328975867370}
   - {fileID: 4737608118736375530}
+  - {fileID: 6594723511479107895}
+  - {fileID: 2930930747760973247}
   - {fileID: 4939978063877297773}
-  - {fileID: 4315914422023400454}
   m_Father: {fileID: 6448958902039436533}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -8133,11 +8133,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 875412338491429176, guid: 4ecfe9be581c35b409208a235a13c0af, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -29
+      value: -9
       objectReference: {fileID: 0}
     - target: {fileID: 875412338491429176, guid: 4ecfe9be581c35b409208a235a13c0af, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -24
+      value: -13
       objectReference: {fileID: 0}
     - target: {fileID: 875412338491429176, guid: 4ecfe9be581c35b409208a235a13c0af, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

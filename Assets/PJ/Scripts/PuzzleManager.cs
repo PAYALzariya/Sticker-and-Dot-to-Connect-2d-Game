@@ -1,11 +1,13 @@
 ﻿using DanielLochner.Assets.SimpleZoom;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using DG.Tweening;
 public class PuzzleManager : MonoBehaviour
 {
     
@@ -76,7 +78,9 @@ public class PuzzleManager : MonoBehaviour
             {
                 Destroy(child);
             }
-            fillCountTemp=1;
+            ReorderListempty();
+            ReorderListFill();
+            fillCountTemp =1;
             fillCount = 0;
             for (int i = 0; i < 3; i++)
             {
@@ -87,6 +91,7 @@ public class PuzzleManager : MonoBehaviour
                 dragobject.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = (fillCountTemp.ToString());
                 fillCountTemp++;
             }
+            placedTextCount.text = $"PLACED {fillCount} / {levelFillImage.Count}";
 
 
             Debug.Log($"Loaded level prefab: " + currentLevel.name);
@@ -95,6 +100,36 @@ public class PuzzleManager : MonoBehaviour
         {
             Debug.LogError($"Level {CurrentLevelCount} not found in Resources/Prefabs/");
         }
+    }
+    public void ReorderListempty()
+    {
+        levelemptyImage = levelemptyImage
+             .OrderBy(go =>
+             {
+                 // Extract number inside parentheses from name "Image (X)"
+                 var match = Regex.Match(go.name, @"\((\d+)\)");
+                 if (match.Success && int.TryParse(match.Groups[1].Value, out int num))
+                     return num;
+
+                 // If no match, keep at end
+                 return int.MaxValue;
+             })
+             .ToList();
+    }
+    public void ReorderListFill()
+    {
+        levelFillImage = levelFillImage
+            .OrderBy(go =>
+            {
+                // Extract number inside parentheses from name "Image (X)"
+                var match = Regex.Match(go.name, @"\((\d+)\)");
+                if (match.Success && int.TryParse(match.Groups[1].Value, out int num))
+                    return num;
+
+                // If no match, keep at end
+                return int.MaxValue;
+            })
+            .ToList();
     }
     public void LoadNewDragObject(int counterFill)
     {
@@ -111,7 +146,8 @@ public class PuzzleManager : MonoBehaviour
         if (fillCount <= levelFillImage.Count)
         {
             DestroyMatchingParents((counterFill).ToString());
-            levelFillImage[counterFill - 1].gameObject.SetActive(true);
+         //   levelemptyImage[counterFill - 1].gameObject.SetActive(true);
+            levelemptyImage[counterFill - 1].GetComponent<Image>().sprite= levelFillImage[counterFill - 1].GetComponent<Image>().sprite;
             fillCount++;
             placedTextCount.text = $"PLACED {fillCount} / {levelFillImage.Count}";
 
@@ -128,7 +164,7 @@ public class PuzzleManager : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         CurrentLevelCount += 1;
         PlayerPrefs.SetInt("CurrentLevel", CurrentLevelCount);
-        LoadLevel();
+      //  LoadLevel();
     }
     public void DestroyMatchingParents(string targetValue)
     {

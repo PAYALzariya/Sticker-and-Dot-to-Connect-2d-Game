@@ -75,7 +75,7 @@ public class Dropable : MonoBehaviour
             {
                 Debug.Log(targetDropzone.GetComponent<TextMeshProUGUI>().text+ "Drop completed! ***" +targetDropzone.name);
                 int index = int.Parse(targetDropzone.GetComponent<TextMeshProUGUI>().text);
-                newTargetDropzone.gameObject.transform.parent.gameObject.SetActive(false);
+                newTargetDropzone.gameObject.SetActive(false);
                 Image st = newTargetDropzone.transform.parent.GetChild(0).transform.GetComponent<Image>();
                 PuzzleManager.instance.StopBlinking(st);
                 PuzzleManager.instance.LoadNewDragObject(index);
