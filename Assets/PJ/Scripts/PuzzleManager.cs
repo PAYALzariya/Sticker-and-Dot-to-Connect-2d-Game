@@ -164,7 +164,7 @@ public class PuzzleManager : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         CurrentLevelCount += 1;
         PlayerPrefs.SetInt("CurrentLevel", CurrentLevelCount);
-      //  LoadLevel();
+        LoadLevel();
     }
     public void DestroyMatchingParents(string targetValue)
     {
