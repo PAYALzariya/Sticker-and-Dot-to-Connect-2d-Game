@@ -405,7 +405,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 2050, y: 1540.91}
+  m_SizeDelta: {x: 2050, y: 1560}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &254128336
 MonoBehaviour:
@@ -784,7 +784,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &495656284
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2919,7 +2919,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: v0.01
+  m_text: v0.02
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3478,7 +3478,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3510,10 +3510,10 @@ RectTransform:
   - {fileID: 254128335}
   m_Father: {fileID: 1272946474515792459}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 1040, y: 0}
-  m_SizeDelta: {x: 2080, y: 1488.28}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 125.474915, y: 0.000015258789}
+  m_SizeDelta: {x: 2060, y: 1570}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1272946472874049755
 GameObject:
@@ -3563,19 +3563,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c2a91c453baab544abe4052050814b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultZoom: 1
+  defaultZoom: 0.8
   minMaxZoom:
-    min: 1
-    max: 3
+    min: 0.8
+    max: 1.8
   zoomTarget: 0
-  customPosition: {x: 0.5, y: 0.5}
+  customPosition: {x: 318.8579, y: 0.00001525879}
   zoomType: 0
   elasticLimit: 2
   elasticDamping: 0.1
   zoomMode: 0
-  useDoubleTap: 1
+  useDoubleTap: 0
   zoomInButton: {fileID: 759101109}
-  zoomInPosition: {x: 0.5, y: 0.5}
+  zoomInPosition: {x: 318.8579, y: 0.5}
   zoomInIncrement: 0.5
   zoomInSmoothing: 0.1
   zoomOutButton: {fileID: 2004154324}

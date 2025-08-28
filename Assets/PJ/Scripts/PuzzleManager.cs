@@ -20,6 +20,7 @@ public class PuzzleManager : MonoBehaviour
     public RectTransform contentREct;
     public List<GameObject> levelFillImage, levelemptyImage;
     public TextMeshProUGUI placedTextCount;
+    Vector2 originalPos = Vector2.zero;
     private void Awake()
     {
         instance = this;
@@ -35,6 +36,7 @@ public class PuzzleManager : MonoBehaviour
             CurrentLevelCount = 1;
             PlayerPrefs.SetInt("CurrentLevel", CurrentLevelCount);
         }
+        originalPos = contentREct.anchoredPosition;
         LoadLevel();
     }
     /// <summary>
@@ -42,7 +44,7 @@ public class PuzzleManager : MonoBehaviour
     /// </summary>
     public void LoadLevel()
     {
-
+        contentREct.anchoredPosition = originalPos;
         // Load prefab from Resources/Prefabs/{levelName}
         if (CurrentLevelCount == 4)
         {
@@ -161,6 +163,7 @@ public class PuzzleManager : MonoBehaviour
     IEnumerator loadnewLEvel()
     {
         currentLevel.transform.GetChild(0).gameObject.GetComponent<Image>().enabled=(true);
+        currentLevel.transform.GetChild(2).gameObject.GetComponent<Mask>().showMaskGraphic = (false);
         yield return new WaitForSeconds(1.5f);
         CurrentLevelCount += 1;
         PlayerPrefs.SetInt("CurrentLevel", CurrentLevelCount);
