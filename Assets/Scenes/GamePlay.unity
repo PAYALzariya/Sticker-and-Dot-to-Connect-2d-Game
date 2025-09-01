@@ -2333,6 +2333,7 @@ MonoBehaviour:
   myImage: {fileID: 0}
   blinkDuration: 0.5
   IsMagnify: 0
+  rm: 1
   blinkingimage: {fileID: 0}
 --- !u!4 &1192657655
 Transform:

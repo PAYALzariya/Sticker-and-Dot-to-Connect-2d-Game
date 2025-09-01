@@ -457,27 +457,30 @@ namespace DanielLochner.Assets.SimpleZoom
                 #endregion
             }
         }
-        public void GoToPosition(Vector2 screenPosition, float targetZoom, float smoothing = 0.2f)
+       /* public void ZoomToWorldObject(RectTransform target, float targetZoom = 2f, float smoothing = 0.2f)
         {
-            // Convert screen position to local pivot
-            Vector2 localPoint;
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                Content,
-                screenPosition,
+            // Convert world position of the target to screen position
+            Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(
                 canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera,
-                out localPoint))
+                target.position
+            );
+
+            // Convert to local pivot relative to Content
+            Vector2 localPos;
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(Content, screenPos,
+                canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera, out localPos))
             {
-                float x = Content.pivot.x + (localPoint.x / Content.rect.width);
-                float y = Content.pivot.y + (localPoint.y / Content.rect.height);
+                float x = Content.pivot.x + (localPos.x / Content.rect.width);
+                float y = Content.pivot.y + (localPos.y / Content.rect.height);
                 Vector2 pivot = new Vector2(x, y);
 
-                // Set pivot so zoom centers around that position
+                // Set pivot to the object’s location
                 SetPivot(pivot);
 
-                // Zoom smoothly to target
+                // Set zoom directly
                 SetZoom(Mathf.Clamp(targetZoom, minMaxZoom.min, minMaxZoom.max), smoothing);
             }
-        }
+        }*/
 
         public void Magi(Vector2 inputPosition)
         {
@@ -519,12 +522,142 @@ namespace DanielLochner.Assets.SimpleZoom
             #endregion
 
         }
-        IEnumerator setGo(Vector2 inputPosition)
+        public void CenterOnObject(RectTransform target, float duration = 0.3f)
         {
-            SetZoom(minMaxZoom.min, 0);
-            yield return new WaitForSeconds(.5f);
-            ZoomIn(inputPosition, zoomInIncrement, zoomInSmoothing);
+            StartCoroutine(CenterOnObjectRoutine(target, duration));
         }
+
+        private IEnumerator CenterOnObjectRoutine(RectTransform target, float duration)
+        {
+            // Make sure layout is up to date
+            Canvas.ForceUpdateCanvases();
+
+            Camera cam = (canvas.renderMode == RenderMode.ScreenSpaceOverlay) ? null : canvas.worldCamera;
+
+            // --- Target's world center ---
+            Vector3[] corners = new Vector3[4];
+            target.GetWorldCorners(corners);
+            Vector3 targetWorldCenter = (corners[0] + corners[2]) * 0.5f;
+
+            // --- Convert into viewport local space ---
+            Vector2 targetLocalInViewport;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                Viewport,
+                RectTransformUtility.WorldToScreenPoint(cam, targetWorldCenter),
+                cam,
+                out targetLocalInViewport
+            );
+
+            // --- Viewport center in local space ---
+            Vector2 viewportLocalCenter = Viewport.rect.center;
+
+            // Delta needed to bring target into center
+            Vector2 delta = targetLocalInViewport - viewportLocalCenter;
+
+            // Animate content movement
+            Vector2 start = Content.anchoredPosition;
+            Vector2 end = ClampAnchoredPosition(start - delta);
+
+            float t = 0f;
+            while (t < duration)
+            {
+                t += Time.unscaledDeltaTime;
+                Content.anchoredPosition = Vector2.Lerp(start, end, t / duration);
+                yield return null;
+            }
+            Content.anchoredPosition = end;
+        }
+
+        private Vector2 ClampAnchoredPosition(Vector2 pos)
+        {
+            Vector2 contentSize = Vector2.Scale(Content.rect.size, Content.localScale);
+            Vector2 viewSize = Vector2.Scale(Viewport.rect.size, Viewport.localScale);
+
+            float minX = viewSize.x * (1f - Viewport.pivot.x) - contentSize.x * (1f - Content.pivot.x);
+            float maxX = contentSize.x * Content.pivot.x - viewSize.x * Viewport.pivot.x;
+            float minY = viewSize.y * (1f - Viewport.pivot.y) - contentSize.y * (1f - Content.pivot.y);
+            float maxY = contentSize.y * Content.pivot.y - viewSize.y * Viewport.pivot.y;
+
+            if (contentSize.x <= viewSize.x) { float midX = (minX + maxX) * 0.5f; minX = maxX = midX; }
+            if (contentSize.y <= viewSize.y) { float midY = (minY + maxY) * 0.5f; minY = maxY = midY; }
+
+            if (scrollRect.horizontal) pos.x = Mathf.Clamp(pos.x, minX, maxX);
+            else pos.x = Content.anchoredPosition.x;
+
+            if (scrollRect.vertical) pos.y = Mathf.Clamp(pos.y, minY, maxY);
+            else pos.y = Content.anchoredPosition.y;
+
+            return pos;
+        }
+
+      /*  public void ScrollToObject(RectTransform target, float duration = 0.5f)
+        {
+            StartCoroutine(ScrollToRoutine(target, duration));
+        }
+
+        private IEnumerator ScrollToRoutine(RectTransform target, float duration)
+        {
+            // Get scroll rect & content
+            RectTransform content = scrollRect.content;
+            RectTransform viewport = scrollRect.viewport;
+
+            // Convert target position into viewport-local space
+            Vector2 localPoint;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                viewport,
+                RectTransformUtility.WorldToScreenPoint(canvas.worldCamera, target.position),
+                canvas.worldCamera,
+                out localPoint
+            );
+
+            // Calculate offset to center the target
+            Vector2 targetNormalizedPos = new Vector2(
+                Mathf.Clamp01((localPoint.x) ),
+                Mathf.Clamp01(( localPoint.y))
+            );
+
+            Vector2 startPos = scrollRect.normalizedPosition;
+            float elapsed = 0f;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                scrollRect.normalizedPosition = Vector2.Lerp(startPos, targetNormalizedPos, elapsed / duration);
+                yield return null;
+            }
+
+            scrollRect.normalizedPosition = targetNormalizedPos;
+        }
+
+        public IEnumerator ZoomToWorldObject(RectTransform target, float targetZoom = 2f, float smoothing = 0.2f)
+        {
+                ZoomOut(target.transform.position,1.8f, 1f);
+          //  useDoubleTap = true;
+         ////   taps = 3;
+       //     OnDoubleTap();
+                 yield return new WaitForSeconds(1f);
+            // Convert world position of the target to screen position
+            Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(
+                canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera,
+                target.position
+            );
+
+            // Convert to local pivot relative to Content
+            Vector2 localPos;
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(Content, screenPos,
+                canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera, out localPos))
+            {
+                float x = Content.pivot.x + (localPos.x / Content.rect.width);
+                float y = Content.pivot.y + (localPos.y / Content.rect.height);
+                Vector2 pivot = new Vector2(x, y);
+
+                // Set pivot to the object’s location
+                SetPivot(pivot);
+
+                // Set zoom directly
+                SetZoom(Mathf.Clamp(targetZoom, minMaxZoom.min, minMaxZoom.max), smoothing);
+            }
+        }*/
         private void OnDoubleTap()
         {
             if (useDoubleTap)

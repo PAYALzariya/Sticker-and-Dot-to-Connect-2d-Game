@@ -224,13 +224,23 @@ public class PuzzleManager : MonoBehaviour
                     SimpleZoom.simpleZoom.GetComponentInParent<Canvas>().worldCamera,
                     levelemptyImage[i].transform.position
                 );
-                SimpleZoom.simpleZoom.Magi(screenPos);
-                blinkingimage= levelemptyImage[i].GetComponent<Image>();
+                // SimpleZoom.simpleZoom.Magi(screenPos);
+                //   StartCoroutine(SimpleZoom.simpleZoom.ZoomToWorldObject(levelemptyImage[i].transform.GetChild(0).GetComponent<RectTransform>(), 2f, 0.2f));
+            //    SimpleZoom.simpleZoom.FocusOnObject(levelemptyImage[i].transform.GetChild(0).GetComponent<RectTransform>(), 2f, 0.5f);
+             //   SimpleZoom.simpleZoom.ScrollToObject(levelemptyImage[i].transform.GetChild(0).GetComponent<RectTransform>(), 0.5f);
+                SimpleZoom.simpleZoom.CenterOnObject(
+    levelemptyImage[i].GetComponent<RectTransform>(),
+    0.3f
+);
+
+
+                blinkingimage = levelemptyImage[i].GetComponent<Image>();
                 MagnifyEffect(levelemptyImage[i].GetComponent<Image>());
             }
         }
 
     }
+    public RenderMode rm;
     public Image blinkingimage;
     public void MagnifyEffect(Image myImage)
     {
