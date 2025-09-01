@@ -21,6 +21,9 @@ public class PuzzleManager : MonoBehaviour
     public List<GameObject> levelFillImage, levelemptyImage;
     public TextMeshProUGUI placedTextCount;
     Vector2 originalPos = Vector2.zero;
+    [SerializeField] private RectTransform compassUI;   // whole compass container
+    [SerializeField] private RectTransform compassArrow; // arrow image inside
+    [SerializeField] private Text countdownText;        // UI text for timer
     private void Awake()
     {
         instance = this;
@@ -207,35 +210,46 @@ public class PuzzleManager : MonoBehaviour
 
     public void DoMagnifyEffect()
     {
-        
-        GameObject dragobject =dragObjectParent.GetChild(0).gameObject;
+
+        GameObject dragobject = dragObjectParent.GetChild(0).gameObject;
         Debug.Log(dragobject.name);
         for (int i = 0; i < levelemptyImage.Count; i++)
         {
-            if(dragobject.GetComponent<Image>().sprite.name == levelemptyImage[i].GetComponent<Image>().sprite.name)
+            if (dragobject.GetComponent<Image>().sprite.name == levelemptyImage[i].GetComponent<Image>().sprite.name)
             {
-                Debug.Log(dragobject.GetComponent<Image>().sprite.name + "   " + levelemptyImage[i].GetComponent<Image>().sprite.name);
-               // SimpleZoom.simpleZoom.ZoomTarget = ZoomTarget.Custom;
                 SimpleZoom.simpleZoom.customPosition = levelemptyImage[i].transform.position;
-                //SimpleZoom.simpleZoom.GoToPosition(levelemptyImage[i].transform.position,2f,0.2f);
-                // Convert world position -> screen position
-                // Convert the rect’s world position to screen position
                 Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(
-                    SimpleZoom.simpleZoom.GetComponentInParent<Canvas>().worldCamera,
-                    levelemptyImage[i].transform.position
-                );
-                // SimpleZoom.simpleZoom.Magi(screenPos);
-                //   StartCoroutine(SimpleZoom.simpleZoom.ZoomToWorldObject(levelemptyImage[i].transform.GetChild(0).GetComponent<RectTransform>(), 2f, 0.2f));
-            //    SimpleZoom.simpleZoom.FocusOnObject(levelemptyImage[i].transform.GetChild(0).GetComponent<RectTransform>(), 2f, 0.5f);
-             //   SimpleZoom.simpleZoom.ScrollToObject(levelemptyImage[i].transform.GetChild(0).GetComponent<RectTransform>(), 0.5f);
-                SimpleZoom.simpleZoom.CenterOnObject(
-    levelemptyImage[i].GetComponent<RectTransform>(),
-    0.3f
-);
+                 SimpleZoom.simpleZoom.GetComponentInParent<Canvas>().worldCamera,
+                 levelemptyImage[i].transform.position
+             );
+                SimpleZoom.simpleZoom.CenterOnObject( levelemptyImage[i].GetComponent<RectTransform>(),  0.3f);
 
 
                 blinkingimage = levelemptyImage[i].GetComponent<Image>();
                 MagnifyEffect(levelemptyImage[i].GetComponent<Image>());
+            }
+        }
+
+    }
+    public void OnClickCompssEffect()
+    {
+
+        GameObject dragobject = dragObjectParent.GetChild(0).gameObject;
+        Debug.Log(dragobject.name);
+        for (int i = 0; i < levelemptyImage.Count; i++)
+        {
+            if (dragobject.GetComponent<Image>().sprite.name == levelemptyImage[i].GetComponent<Image>().sprite.name)
+            {
+                SimpleZoom.simpleZoom.customPosition = levelemptyImage[i].transform.position;
+                Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(
+                 SimpleZoom.simpleZoom.GetComponentInParent<Canvas>().worldCamera,
+                 levelemptyImage[i].transform.position
+             );
+             //   SimpleZoom.simpleZoom.CenterOnObject(levelemptyImage[i].GetComponent<RectTransform>(), 0.3f);
+                SimpleZoom.simpleZoom.ShowCompass(levelemptyImage[i].GetComponent<RectTransform>(),compassUI,compassArrow,countdownText);
+
+                // blinkingimage = levelemptyImage[i].GetComponent<Image>();
+                //  MagnifyEffect(levelemptyImage[i].GetComponent<Image>());
             }
         }
 
@@ -252,6 +266,7 @@ public class PuzzleManager : MonoBehaviour
             }
         }
     }
+
 
     public void BlinkImage(Image targetImage)
     {

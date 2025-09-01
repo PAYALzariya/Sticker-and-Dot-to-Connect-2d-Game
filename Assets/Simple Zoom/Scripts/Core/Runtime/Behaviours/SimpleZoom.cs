@@ -52,7 +52,7 @@ namespace DanielLochner.Assets.SimpleZoom
         private Canvas canvas;
         #endregion
         public static SimpleZoom simpleZoom;
-        
+
         #region Properties
         public float DefaultZoom
         {
@@ -169,7 +169,7 @@ namespace DanielLochner.Assets.SimpleZoom
             get => scrollWheelSmoothing;
             set => scrollWheelSmoothing = value;
         }
-        
+
         private RectTransform Content
         {
             get => scrollRect.content;
@@ -216,7 +216,7 @@ namespace DanielLochner.Assets.SimpleZoom
                     if (Vector2.Distance(viewportDimensions / zoomViewViewportDimensions, contentDimensions / zoomViewContentDimensions) > 0f)
                     {
                         Debug.Log("<b>[SimpleZoom]</b> The Zoom View's dimensions must be SIMILAR (i.e. the ratios of the lengths of their corresponding sides are equal) to that of the Simple Zoom's dimensions.", gameObject);
-                     //   valid = false;
+                        //   valid = false;
                     }
                 }
                 return valid;
@@ -322,7 +322,7 @@ namespace DanielLochner.Assets.SimpleZoom
             {
                 OnHandheldUpdate();
             }
-            else 
+            else
             if (SystemInfo.deviceType == DeviceType.Desktop)
             {
                 OnDesktopUpdate();
@@ -414,7 +414,7 @@ namespace DanielLochner.Assets.SimpleZoom
                     {
                         SetZoom(minMaxZoom.max, 0.1f);
                     }
-                    else 
+                    else
                     if (CurrentZoom < minMaxZoom.min)
                     {
                         SetZoom(minMaxZoom.min, 0.1f);
@@ -457,30 +457,7 @@ namespace DanielLochner.Assets.SimpleZoom
                 #endregion
             }
         }
-       /* public void ZoomToWorldObject(RectTransform target, float targetZoom = 2f, float smoothing = 0.2f)
-        {
-            // Convert world position of the target to screen position
-            Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(
-                canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera,
-                target.position
-            );
-
-            // Convert to local pivot relative to Content
-            Vector2 localPos;
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(Content, screenPos,
-                canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera, out localPos))
-            {
-                float x = Content.pivot.x + (localPos.x / Content.rect.width);
-                float y = Content.pivot.y + (localPos.y / Content.rect.height);
-                Vector2 pivot = new Vector2(x, y);
-
-                // Set pivot to the object’s location
-                SetPivot(pivot);
-
-                // Set zoom directly
-                SetZoom(Mathf.Clamp(targetZoom, minMaxZoom.min, minMaxZoom.max), smoothing);
-            }
-        }*/
+        #region magnify effect
 
         public void Magi(Vector2 inputPosition)
         {
@@ -504,7 +481,7 @@ namespace DanielLochner.Assets.SimpleZoom
                         isInitialTouch = true;
                         #endregion
             */
-            SetZoom(minMaxZoom.min,0);
+            SetZoom(minMaxZoom.min, 0);
             #region Set Pivot
             ZoomIn(inputPosition, zoomInIncrement, zoomInSmoothing);
             /*  Vector2 pivot = Vector2.zero;
@@ -590,74 +567,63 @@ namespace DanielLochner.Assets.SimpleZoom
             return pos;
         }
 
-      /*  public void ScrollToObject(RectTransform target, float duration = 0.5f)
+        #endregion
+        #region compass effect
+        private Coroutine compassRoutine;
+        /// <summary>
+        /// Show a compass that points to the target for a limited time.
+        /// </summary>
+        public void ShowCompass(RectTransform target, RectTransform compassUI, RectTransform compassArrow, Text countdownText)
         {
-            StartCoroutine(ScrollToRoutine(target, duration));
+            if (compassRoutine != null)
+                StopCoroutine(compassRoutine);
+
+            compassRoutine = StartCoroutine(CompassRoutine(target, compassUI, compassArrow, countdownText));
+
         }
-
-        private IEnumerator ScrollToRoutine(RectTransform target, float duration)
+        private IEnumerator CompassRoutine(RectTransform target, 
+            RectTransform compassUI, RectTransform compassArrow, Text countdownText)
         {
-            // Get scroll rect & content
-            RectTransform content = scrollRect.content;
-            RectTransform viewport = scrollRect.viewport;
+            compassUI.gameObject.SetActive(true);
 
-            // Convert target position into viewport-local space
-            Vector2 localPoint;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                viewport,
-                RectTransformUtility.WorldToScreenPoint(canvas.worldCamera, target.position),
-                canvas.worldCamera,
-                out localPoint
-            );
+            float timer = 15f;
+            Camera cam = (canvas.renderMode == RenderMode.ScreenSpaceOverlay) ? null : canvas.worldCamera;
 
-            // Calculate offset to center the target
-            Vector2 targetNormalizedPos = new Vector2(
-                Mathf.Clamp01((localPoint.x) ),
-                Mathf.Clamp01(( localPoint.y))
-            );
-
-            Vector2 startPos = scrollRect.normalizedPosition;
-            float elapsed = 0f;
-
-            while (elapsed < duration)
+            while (timer > 0f && target != null)
             {
-                elapsed += Time.deltaTime;
-                scrollRect.normalizedPosition = Vector2.Lerp(startPos, targetNormalizedPos, elapsed / duration);
+                // --- Find target world center
+                Vector3[] corners = new Vector3[4];
+                target.GetWorldCorners(corners);
+                Vector3 targetWorldCenter = (corners[0] + corners[2]) * 0.5f;
+
+                // Convert target into viewport local
+                Vector2 targetLocal;
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    Viewport,
+                    RectTransformUtility.WorldToScreenPoint(cam, targetWorldCenter),
+                    cam,
+                    out targetLocal
+                );
+
+                // Direction from viewport center
+                Vector2 dir = targetLocal - Viewport.rect.center;
+
+                // Rotate arrow
+                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                compassArrow.localRotation = Quaternion.Euler(0, 0, angle - 90f);
+
+                // Update countdown
+                timer -= Time.deltaTime;
+                countdownText.text = Mathf.CeilToInt(timer).ToString();
+
                 yield return null;
             }
 
-            scrollRect.normalizedPosition = targetNormalizedPos;
+            compassUI.gameObject.SetActive(false);
+            compassRoutine = null;
         }
+        #endregion
 
-        public IEnumerator ZoomToWorldObject(RectTransform target, float targetZoom = 2f, float smoothing = 0.2f)
-        {
-                ZoomOut(target.transform.position,1.8f, 1f);
-          //  useDoubleTap = true;
-         ////   taps = 3;
-       //     OnDoubleTap();
-                 yield return new WaitForSeconds(1f);
-            // Convert world position of the target to screen position
-            Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(
-                canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera,
-                target.position
-            );
-
-            // Convert to local pivot relative to Content
-            Vector2 localPos;
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(Content, screenPos,
-                canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera, out localPos))
-            {
-                float x = Content.pivot.x + (localPos.x / Content.rect.width);
-                float y = Content.pivot.y + (localPos.y / Content.rect.height);
-                Vector2 pivot = new Vector2(x, y);
-
-                // Set pivot to the object’s location
-                SetPivot(pivot);
-
-                // Set zoom directly
-                SetZoom(Mathf.Clamp(targetZoom, minMaxZoom.min, minMaxZoom.max), smoothing);
-            }
-        }*/
         private void OnDoubleTap()
         {
             if (useDoubleTap)
@@ -706,7 +672,7 @@ namespace DanielLochner.Assets.SimpleZoom
             {
                 zoomViewScale = (zoomView.transform as RectTransform).rect.width / (Content.rect.width * Content.localScale.x);
 
-                zoomViewViewport.offsetMin =  zoomViewScale * new Vector2(ZoomMargin.x, ZoomMargin.z);
+                zoomViewViewport.offsetMin = zoomViewScale * new Vector2(ZoomMargin.x, ZoomMargin.z);
                 zoomViewViewport.offsetMax = -zoomViewScale * new Vector2(ZoomMargin.y, ZoomMargin.w);
             }
         }
