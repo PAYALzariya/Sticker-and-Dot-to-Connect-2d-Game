@@ -21,9 +21,10 @@ public class PuzzleManager : MonoBehaviour
     public List<GameObject> levelFillImage, levelemptyImage;
     public TextMeshProUGUI placedTextCount;
     Vector2 originalPos = Vector2.zero;
-    [SerializeField] private RectTransform compassUI;   // whole compass container
-    [SerializeField] private RectTransform compassArrow; // arrow image inside
-    [SerializeField] private Text countdownText;        // UI text for timer
+    [SerializeField] public RectTransform compassUI;   // whole compass container
+    [SerializeField] public RectTransform compassArrow; // arrow image inside
+    [SerializeField] public Image compassFillImage;      // the radial fill image (CompassFill)
+    [SerializeField] public Text countdownText;        // UI text for timer
     private void Awake()
     {
         instance = this;
@@ -208,7 +209,7 @@ public class PuzzleManager : MonoBehaviour
     public bool IsMagnify = false;
     [ContextMenu("XYZ")]
 
-    public void DoMagnifyEffect()
+    public void OnClickMagnifyEffect()
     {
 
         GameObject dragobject = dragObjectParent.GetChild(0).gameObject;
@@ -246,7 +247,7 @@ public class PuzzleManager : MonoBehaviour
                  levelemptyImage[i].transform.position
              );
              //   SimpleZoom.simpleZoom.CenterOnObject(levelemptyImage[i].GetComponent<RectTransform>(), 0.3f);
-                SimpleZoom.simpleZoom.ShowCompass(levelemptyImage[i].GetComponent<RectTransform>(),compassUI,compassArrow,countdownText);
+                SimpleZoom.simpleZoom.ShowCompass(levelemptyImage[i].transform.GetChild(0).GetComponent<RectTransform>(),compassUI,compassArrow,countdownText, compassFillImage);
 
                 // blinkingimage = levelemptyImage[i].GetComponent<Image>();
                 //  MagnifyEffect(levelemptyImage[i].GetComponent<Image>());

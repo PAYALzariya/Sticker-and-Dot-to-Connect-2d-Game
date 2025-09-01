@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
+using DanielLochner.Assets.SimpleZoom;
 [RequireComponent(typeof(Draggable))]
 public class Dropable : MonoBehaviour
 {
@@ -79,6 +80,8 @@ public class Dropable : MonoBehaviour
                 Image st = newTargetDropzone.transform.parent.transform.GetComponent<Image>();
                 PuzzleManager.instance.StopBlinking(st);
                 PuzzleManager.instance.LoadNewDragObject(index);
+           //     PuzzleManager.instance.compassUI.gameObject.SetActive(false);
+                SimpleZoom.simpleZoom.HideCompass(PuzzleManager.instance.compassUI.gameObject);// = null;
             }
         }
         else

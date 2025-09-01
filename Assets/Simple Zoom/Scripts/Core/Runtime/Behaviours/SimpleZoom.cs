@@ -569,24 +569,27 @@ namespace DanielLochner.Assets.SimpleZoom
 
         #endregion
         #region compass effect
-        private Coroutine compassRoutine;
+        public Coroutine compassRoutine;
         /// <summary>
         /// Show a compass that points to the target for a limited time.
         /// </summary>
-        public void ShowCompass(RectTransform target, RectTransform compassUI, RectTransform compassArrow, Text countdownText)
+        public void ShowCompass(RectTransform target, RectTransform compassUI, RectTransform compassArrow, Text countdownText,Image compassFillImage)
         {
             if (compassRoutine != null)
+            {
                 StopCoroutine(compassRoutine);
+                compassRoutine = null;
+            }
 
-            compassRoutine = StartCoroutine(CompassRoutine(target, compassUI, compassArrow, countdownText));
-
+            compassRoutine = StartCoroutine(CompassRoutineInternal(target, compassUI, compassArrow, countdownText, compassFillImage));
         }
-        private IEnumerator CompassRoutine(RectTransform target, 
-            RectTransform compassUI, RectTransform compassArrow, Text countdownText)
+
+        private IEnumerator CompassRoutineInternal(RectTransform target, RectTransform compassUI, RectTransform compassArrow, Text countdownText,Image compassFillImage)
         {
             compassUI.gameObject.SetActive(true);
 
             float timer = 15f;
+            compassFillImage.fillAmount = 1f;
             Camera cam = (canvas.renderMode == RenderMode.ScreenSpaceOverlay) ? null : canvas.worldCamera;
 
             while (timer > 0f && target != null)
@@ -612,15 +615,30 @@ namespace DanielLochner.Assets.SimpleZoom
                 float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
                 compassArrow.localRotation = Quaternion.Euler(0, 0, angle - 90f);
 
+                // fill amount: fraction remaining
+                float fill = timer / 15f;
+                compassFillImage.fillAmount = fill;
+
                 // Update countdown
                 timer -= Time.deltaTime;
-                countdownText.text = Mathf.CeilToInt(timer).ToString();
+                int seconds = Mathf.CeilToInt(timer);
+                countdownText.text = string.Format("00:{0:00}", seconds);
 
                 yield return null;
             }
 
             compassUI.gameObject.SetActive(false);
             compassRoutine = null;
+        }
+
+        public void HideCompass(GameObject compassUI)
+        {
+            if (compassRoutine != null)
+            {
+                StopCoroutine(compassRoutine);
+                compassRoutine = null;
+            }
+            compassUI.SetActive(false);
         }
         #endregion
 
